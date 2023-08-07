@@ -1,5 +1,7 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import { validateRequest } from 'zod-express-middleware';
+import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
@@ -13,7 +15,16 @@ app.get('/users', async (req, res) => {
   return res.send(users);
 });
 
-app.post('/users', async (req, res) => {});
+app.post(
+  '/users',
+  validateRequest({
+    body: z.object({
+      name: z.string(),
+      email: z.string(),
+    }),
+  }),
+  async (req, res) => {}
+);
 
 app.listen(3003, () => {
   console.log('server 3003');
