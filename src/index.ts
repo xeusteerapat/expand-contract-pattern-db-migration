@@ -19,11 +19,22 @@ app.post(
   '/users',
   validateRequest({
     body: z.object({
-      name: z.string(),
+      fullname: z.string(),
       email: z.string(),
     }),
   }),
-  async (req, res) => {}
+  async (req, res) => {
+    const { fullname, email } = req.body;
+
+    const newUser = await prisma.users.create({
+      data: {
+        fullname,
+        email,
+      },
+    });
+
+    return res.send(newUser);
+  }
 );
 
 app.listen(3003, () => {
